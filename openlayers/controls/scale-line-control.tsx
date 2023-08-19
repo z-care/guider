@@ -43,11 +43,9 @@ interface Props {
   text?: boolean;
 }
 
-
 const ScaleLineControl = ({
   minWidth = 140,
   steps = 1,
-  units = 'metric',
   bar = false,
   text = false
 }: Props) => {
@@ -58,7 +56,6 @@ const ScaleLineControl = ({
     if (!map) return;
 
     let scaleLineControl = new ScaleLine({
-      units,
       bar,
       steps,
       text,

@@ -22,7 +22,7 @@ const pointStyle = new CircleStyle({
     radius: 10,
 })
 
-export const pageHooks = () => {
+export const usePageHooks = () => {
     const [currentUserLocInfo, setCurrentUserLocInfo] = useState<GeolocationPosition>()
     const [destiny, setDestiny] = useState<any>()
     const [chosenAddress, setChosenAddress] = useState('')

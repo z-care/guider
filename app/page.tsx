@@ -5,7 +5,7 @@ import { Layers, TileLayer, VectorLayer } from '@/openlayers/layers'
 import { osm, xyz } from '@/openlayers/source'
 import { Box, IconButton, IconButtonProps, styled } from '@mui/material'
 import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
-import { pageHooks } from './hooks'
+import { usePageHooks } from './hooks'
 import { StyledIconButton } from '@/components/mui'
 import Autocomplete from '@/components/mui/Autocomplete'
 
@@ -20,7 +20,7 @@ export default function Home() {
     setChosenAddress, 
     setSuggestionInfo,
     handleCurrentLocation,
-   } = pageHooks()
+   } = usePageHooks()
   
 
   return (
