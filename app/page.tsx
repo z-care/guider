@@ -1,95 +1,98 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client"
+import Map, { Projection } from '@/openlayers'
+import { Controls } from '@/openlayers/controls'
+import { Layers, TileLayer, VectorLayer } from '@/openlayers/layers'
+import { osm, xyz } from '@/openlayers/source'
+import { Box, IconButton, IconButtonProps, styled } from '@mui/material'
+import LocationSearchingIcon from '@mui/icons-material/LocationSearching';
+import { pageHooks } from './hooks'
+import { StyledIconButton } from '@/components/mui'
+import Autocomplete from '@/components/mui/Autocomplete'
+
 
 export default function Home() {
+  const { 
+    center, 
+    map, 
+    setMap, 
+    currLocVectorSource, 
+    currLocVectorStyle, 
+    setChosenAddress, 
+    setSuggestionInfo,
+    handleCurrentLocation,
+   } = pageHooks()
+  
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <Box component="main" sx={{
+      position: 'relative',
+      width: '100%',
+      height: '100vh'
+    }}>
+      <Map
+        map={map}
+        setMap={setMap}
+        width={'100%'}
+        height={'100%'}
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          margin: 'auto',
+        }}
+        center={{
+          longitude: center[0],
+          latitude: center[1],
+        }}
+        zoom={18}
+        projection={
+          new Projection({
+            code: 'EPSG:3857',
+            units: 'm',
+          })
+        }
+      >
+        <Controls>
+        </Controls>
+        <Layers>
+          <TileLayer
+            source={
+              // osm()
+              xyz({
+                url: 'http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}',
+              })
+            } />
+          <VectorLayer
+            source={currLocVectorSource.current}
+            style={currLocVectorStyle.current}
+          />
+        </Layers>
+      </Map>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <Autocomplete
+        onChosen={(c) => setChosenAddress(c)} 
+        onSuggestionFind={(data) => setSuggestionInfo(data)}
+        sx={{
+          position: 'absolute',
+          insetBlockStart: 20,
+          insetInlineStart: 20,
+          backgroundColor: 'Background',
+          width: 300,
+        }}
+      />
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <StyledIconButton
+        onClick={() => handleCurrentLocation()}
+        sx={{
+          position: 'absolute',
+          insetBlockEnd: 20,
+          insetInlineEnd: 20,
+        }}
+        backgroundcolor='#c0c0c0'>
+        <LocationSearchingIcon />
+      </StyledIconButton>
+    </Box>
   )
 }
