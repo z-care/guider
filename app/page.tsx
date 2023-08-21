@@ -27,7 +27,7 @@ export default function Home() {
     <Box component="main" sx={{
       position: 'relative',
       width: '100%',
-      height: '90vh'
+      height: '100vh'
     }}>
       <Map
         map={map}
