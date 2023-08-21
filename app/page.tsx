@@ -87,8 +87,8 @@ export default function Home() {
         onClick={() => handleCurrentLocation()}
         sx={{
           position: 'absolute',
-          insetBlockEnd: 20,
-          insetInlineEnd: 20,
+          insetBlockEnd: '5rem',
+          insetInlineEnd: '3rem',
         }}
         backgroundcolor='#c0c0c0'>
         <LocationSearchingIcon />
