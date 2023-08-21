@@ -12,12 +12,13 @@ export interface AutocompleteProps {
     className?: string
     sx?: SxProps<Theme>
     label?: string
+    placeholder?: string
     onChosen?: (data: any) => void
     onSuggestionFind?: (data: any) => void
 }
 
 
-const Autocomplete = ({ className, sx, label, onChosen, onSuggestionFind }: AutocompleteProps) => {
+const Autocomplete = ({ className, sx, label, placeholder, onChosen, onSuggestionFind }: AutocompleteProps) => {
     const [value, setValue] = useState<string | null>(null);
     const [inputValue, setInputValue] = useState('');
     const [suggestion, setSuggestion] = useState<any[]>([]);
@@ -42,6 +43,7 @@ const Autocomplete = ({ className, sx, label, onChosen, onSuggestionFind }: Auto
     return (
         <MuiAutocomplete
             className={className}
+            placeholder={placeholder}
             value={value}
             onChange={(event: any, newValue: string | null) => {
                 setValue(newValue)

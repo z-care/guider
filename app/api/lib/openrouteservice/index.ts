@@ -35,7 +35,7 @@ export const directions = async (
     'cycling-regular' |
     'cycling-road' |
     'cycling-mountain' |
-    'cycling-electric'  = 'foot-walking',
+    'cycling-electric'  = 'cycling-road',
     ) => {
     const param = new URLSearchParams({
         api_key: apiKey,

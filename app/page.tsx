@@ -11,17 +11,19 @@ import Autocomplete from '@/components/mui/Autocomplete'
 
 
 export default function Home() {
-  const { 
-    center, 
-    map, 
-    setMap, 
-    currLocVectorSource, 
-    currLocVectorStyle, 
-    setChosenAddress, 
-    setSuggestionInfo,
+  const {
+    center,
+    map,
+    setMap,
+    vectorSource,
+    FeatureStylesFunc,
+    setOriginChosenAddress,
+    setOriginSuggestionInfo,
+    setDestinyChosenAddress,
+    setDestinySuggestionInfo,
     handleCurrentLocation,
-   } = usePageHooks()
-  
+  } = usePageHooks()
+
 
   return (
     <Box component="main" sx={{
@@ -59,29 +61,40 @@ export default function Home() {
         <Layers>
           <TileLayer
             source={
-              // osm()
-              xyz({
-                url: 'http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}',
-              })
+              osm()
+              // xyz({
+              //   url: 'http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}',
+              // })
             } />
           <VectorLayer
-            source={currLocVectorSource.current}
-            style={currLocVectorStyle.current}
+            source={vectorSource.current}
+            style={FeatureStylesFunc}
           />
         </Layers>
       </Map>
 
-      <Autocomplete
-        onChosen={(c) => setChosenAddress(c)} 
-        onSuggestionFind={(data) => setSuggestionInfo(data)}
+      <Box
         sx={{
           position: 'absolute',
           insetBlockStart: 20,
           insetInlineStart: 20,
           backgroundColor: 'Background',
           width: 300,
-        }}
-      />
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+        }}>
+        <Autocomplete
+          onChosen={(c) => setOriginChosenAddress(c)}
+          onSuggestionFind={(data) => setOriginSuggestionInfo(data)}
+          label='orgin'
+        />
+        <Autocomplete
+          onChosen={(c) => setDestinyChosenAddress(c)}
+          onSuggestionFind={(data) => setDestinySuggestionInfo(data)}
+          label='destiny'
+        />
+      </Box>
 
       <StyledIconButton
         onClick={() => handleCurrentLocation()}

@@ -11,6 +11,7 @@ import {
 //geom
 import {
     Point as PointGeom,
+    LineString as LineStringGeom,
     Geometry as GeometryGeom,
 } from "ol/geom";
 
@@ -58,6 +59,8 @@ export {
     ViewOl,
     FeatureOl,
     PointGeom,
+    LineStringGeom,
+    GeometryGeom,
     fromLonLatProj,
     toLonLatProj,
 }

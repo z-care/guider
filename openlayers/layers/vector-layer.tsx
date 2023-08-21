@@ -26,11 +26,15 @@ import {
     Icon as IconStyle,
     Image as ImageStyle,
 } from 'ol/style';
+import { FlatStyleLike } from "ol/style/flat";
+import { Geometry } from "ol/geom";
+import { FeatureOl } from "..";
 
 
+type StyleLikeFunc = (feature: FeatureOl<Geometry>) => StyleLike
 interface Props {
     source: VectorSource;
-    style?: StyleLike;
+    style?: StyleLike | FlatStyleLike | StyleLikeFunc | null;
     zIndex?: number;
     maxResolution?: number;
     minResolution?: number;
@@ -45,7 +49,7 @@ const VectorLayer = ({ source, style, zIndex = 0, minResolution, maxResolution}:
 
         let vectorLayer = new VectorLayerOL({
             source,
-            style,
+            style, 
             minResolution,
             maxResolution,
         });
