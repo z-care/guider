@@ -13,7 +13,7 @@ import {
     transform
 } from "@/openlayers"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 
 const FeatureStyles = {
@@ -66,7 +66,10 @@ export const usePageHooks = () => {
     const [origin, setOrigin] = useState<GeolocationPosition>()
     const [destiny, setDestiny] = useState<any>()
 
-    const { data: dirData, refetch: dirRefetch } = useQuery({
+    const {
+        data: dirData,
+        refetch: dirRefetch,
+    } = useQuery({
         enabled: false,
         queryKey: ["direction", origin, destiny],
         queryFn: () => fetcher<any>("", "/api/direction", {
@@ -98,12 +101,20 @@ export const usePageHooks = () => {
 
     const handleCurrentLocation = () => {
         window.navigator.geolocation.getCurrentPosition((data) => {
-            console.log(data)
             setOrigin(data)
+            getDirection()
         }, (error) => {
-            console.log(error)
             alert(`App can't get your current location!`)
         }, { enableHighAccuracy: true })
+    }
+
+
+    const getDirection = () => {
+        setTimeout(() => {
+            if (destiny && origin) {
+                dirRefetch()
+            }
+        }, 100)
     }
 
 
@@ -164,23 +175,11 @@ export const usePageHooks = () => {
             setDestiny(coordinates)
         }
 
-        if (map && destiny && origin) setTimeout(() => dirRefetch(), 50)
-    }, [
-        origin,
-        destiny,
-        originAddress,
-        originSuggestionInfo,
-        destinyAddress,
-        destinySuggestionInfo,
-    ])
-
-    useEffect(() => {
         if (map && dirData?.features?.length > 0) {
             let linePoints = dirData.features[0]?.geometry?.coordinates || []
 
             if (linePoints?.length > 0) {
-                linePoints = linePoints.map((item: any) => transform([item[1], item[0]], 'EPSG:4326', 'EPSG:3857'))
-                console.log(linePoints)
+                linePoints = linePoints.map((item: any) => transform(item, 'EPSG:4326', 'EPSG:3857'))
 
                 if (routingLineFeature.current) vectorSource.current.removeFeature(routingLineFeature.current)
 
@@ -194,7 +193,15 @@ export const usePageHooks = () => {
                 })
             }
         }
-    }, [map, dirData])
+    }, [
+        origin,
+        destiny,
+        dirData,
+        originAddress,
+        originSuggestionInfo,
+        destinyAddress,
+        destinySuggestionInfo,
+    ])
 
 
     return {
@@ -211,6 +218,7 @@ export const usePageHooks = () => {
         setDestinyChosenAddress,
         destinySuggestionInfo,
         setDestinySuggestionInfo,
+        getDirection,
         handleCurrentLocation,
     }
 }

@@ -37,14 +37,25 @@ export const directions = async (
     'cycling-mountain' |
     'cycling-electric'  = 'cycling-road',
     ) => {
-    const param = new URLSearchParams({
-        api_key: apiKey,
-        start: `${start.lat},${start.lng}`,
-        end: `${end.lat},${end.lng}`
+    return await fetcher(baseUrl, `/v2/directions/${type}/geojson`, {
+        method: "POST",
+        headers: {
+            "Authorization": apiKey,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            coordinates: [ [start.lng, start.lat],[end.lng, end.lat]],
+            elevation: true,
+            extra_info: [
+                "surface",
+                "steepness",
+                "waytype",
+            ],
+            units: "km",
+            language: "en",
+            preference: "recommended",
+        })
     })
-
-
-    return await fetcher(baseUrl, `/v2/directions/${type}?` + param)
 }
 
 

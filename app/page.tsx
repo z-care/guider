@@ -21,6 +21,7 @@ export default function Home() {
     setOriginSuggestionInfo,
     setDestinyChosenAddress,
     setDestinySuggestionInfo,
+    getDirection,
     handleCurrentLocation,
   } = usePageHooks()
 
@@ -61,10 +62,10 @@ export default function Home() {
         <Layers>
           <TileLayer
             source={
-              osm()
-              // xyz({
-              //   url: 'http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}',
-              // })
+              // osm()
+              xyz({
+                url: 'http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}',
+              })
             } />
           <VectorLayer
             source={vectorSource.current}
@@ -85,12 +86,18 @@ export default function Home() {
           gap: 1,
         }}>
         <Autocomplete
-          onChosen={(c) => setOriginChosenAddress(c)}
+          onChosen={(c) => {
+            setOriginChosenAddress(c)
+            getDirection()
+          }}
           onSuggestionFind={(data) => setOriginSuggestionInfo(data)}
           label='orgin'
         />
         <Autocomplete
-          onChosen={(c) => setDestinyChosenAddress(c)}
+          onChosen={(c) => {
+            setDestinyChosenAddress(c)
+            getDirection()
+          }}
           onSuggestionFind={(data) => setDestinySuggestionInfo(data)}
           label='destiny'
         />
