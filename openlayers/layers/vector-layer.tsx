@@ -49,7 +49,7 @@ const VectorLayer = ({ source, style, zIndex = 0, minResolution, maxResolution}:
 
         let vectorLayer = new VectorLayerOL({
             source,
-            style, 
+            style: style as any, 
             minResolution,
             maxResolution,
         });
