@@ -65,12 +65,14 @@ const FeatureStylesFunc = (feature: FeatureOl) => {
 export const usePageHooks = () => {
     const [origin, setOrigin] = useState<GeolocationPosition>()
     const [destiny, setDestiny] = useState<any>()
+    const [callDirDirection, setCallDirDirection] = useState(false)
 
     const {
         data: dirData,
         refetch: dirRefetch,
     } = useQuery({
         enabled: false,
+        retry: 4,
         queryKey: ["direction", origin, destiny],
         queryFn: () => fetcher<any>("", "/api/direction", {
             method: "POST",
@@ -108,14 +110,15 @@ export const usePageHooks = () => {
         }, { enableHighAccuracy: true })
     }
 
+    const getDirection = () => setCallDirDirection(false)
 
-    const getDirection = () => {
-        setTimeout(() => {
-            if (destiny && origin) {
-                dirRefetch()
-            }
-        }, 100)
-    }
+    useEffect(() => {
+        if(origin && destiny && !callDirDirection) {
+            setTimeout(() => dirRefetch(), 50)
+            setCallDirDirection(true)
+        }
+
+    }, [origin, destiny, callDirDirection])
 
 
     useEffect(() => {
